@@ -27,15 +27,31 @@ $(document).ready(function() {
 			deck.push({number: j+1, suit: suit});
 		}
 	}
-	
-	var shuffleDeck = _.shuffle(deck);
+
+	//what does this do?
+	var shuffle = function(array) { 
+		var copy = [];
+		var n = array.length; 
+		var i; 
+		while (n) { i = Math.floor(Math.random() * array.length);  
+			if (i in array) { 
+		 		copy.push(array[i]); 
+		 		delete array[i]; 
+		 		n--; 
+		 	} 
+		} 
+		return copy; 
+	}
 
 	//shuffle the deck
+	var shuffleDeck = shuffle(deck);
+
+
+	//divide out the cards into the two arrays
 	var cards_player_1 = shuffleDeck.slice(0, shuffleDeck.length/2);
 	var cards_player_2 = shuffleDeck.slice(shuffleDeck.length/2, shuffleDeck.length);
-	//divide out the cards into the two arrays
-
 	
+
 	
 	//create a function (algorithm) called "war" that takes two cards as parameters, compares them and returns a winner. A tie should return false.
 	function war(p1, p2) {
@@ -46,20 +62,55 @@ $(document).ready(function() {
 			return "p2";
 		}
 		else {
+			// alert("YOU TIED SUCKA!!");
 			return false;
 		};
 	};
 	
 	//tie function? (Black Diamond)
+
+function tie() {
+		var tieNum = 3
+		var tieLoop = true;
+		while(tieLoop) {
+			var p1card = cards_player_1[tieNum].number;
+			var p2card = cards_player_2[tieNum].number;
+			var winner = war(p1card,p2card);
+			
+			if(winner === "p1"){
+				for(i=0; i<tieNum; i++) {
+					cards_player_1.push(cards_player_1[i]);
+					cards_player_1.push(cards_player_2[i]);
+					cards_player_1.shift();
+					cards_player_2.shift();
+				};
+				tieLoop = false;
+			}
+			else if(winner === "p2") {
+				for(i=0; i<tieNum; i++) {
+					cards_player_2.push(cards_player_2[i]);
+					cards_player_2.push(cards_player_1[i]);
+					cards_player_2.shift();
+					cards_player_1.shift();
+				};
+				tieLoop = false;
+			}
+			else {
+				tieNum += 4;
+			};
+
+		};
+
+	};
+
 	
 	//create a play function
-		//compare the cards
-		//give the winner both cards (at end of deck)
 	function play() {
 		var p1card = cards_player_1[0].number;
 		var p2card = cards_player_2[0].number;
 		var winner = war(p1card,p2card);
-
+	//compare the cards
+	//give the winner both cards (at end of deck)
 		if(winner === "p1"){
 			cards_player_1.push(cards_player_1.shift());
 			cards_player_1.push(cards_player_2[0]);
@@ -690,36 +741,3 @@ $(document).ready(function() {
 
 
 
-// function tie() {
-	// 	var tieNum = 3
-	// 	var tieLoop = true;
-	// 	while(tieLoop) {
-	// 		var p1card = cards_player_1[tieNum].number;
-	// 		var p2card = cards_player_2[tieNum].number;
-	// 		var winner = war(p1card,p2card);
-			
-	// 		if(winner === "p1"){
-	// 			for(i=0; i<tieNum; i++) {
-	// 				cards_player_1.push(cards_player_1[i]);
-	// 				cards_player_1.push(cards_player_2[i]);
-	// 				cards_player_1.shift();
-	// 				cards_player_2.shift();
-	// 			};
-	// 			tieLoop = false;
-	// 		}
-	// 		else if(winner === "p2") {
-	// 			for(i=0; i<tieNum; i++) {
-	// 				cards_player_2.push(cards_player_2[i]);
-	// 				cards_player_2.push(cards_player_1[i]);
-	// 				cards_player_2.shift();
-	// 				cards_player_1.shift();
-	// 			};
-	// 			tieLoop = false;
-	// 		}
-	// 		else {
-	// 			tieNum += 4;
-	// 		};
-
-	// 	};
-
-	// };
